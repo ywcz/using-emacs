@@ -1,0 +1,3 @@
+* emacs study
+  ** day 1
+  
