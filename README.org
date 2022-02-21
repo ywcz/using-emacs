@@ -1,3 +1,2 @@
-* emacs study
-** day 1
+* Emacs Start
   
