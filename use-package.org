@@ -1,15 +1,25 @@
 #+STARTUP: overview
-* interface weaks
+* base setting
   #+begin_src emacs-lisp
-    (setq inhibit-startup-message t)
-    (tool-bar-mode -1)
+    (delete-selection-mode 1)
+    (setq make-backup-files nil)
+    (global-hl-line-mode 1)
+    (global-auto-revert-mode 1)
+    (setq ring-bell-function 'ignore)
     (require 'org-tempo)
     (fset 'yes-or-no-p 'y-or-n-p)
+    (setq inhibit-startup-message t)
+  #+end_src
+* interface weaks
+  #+begin_src emacs-lisp
+    ;; 不显示工具栏
+    (tool-bar-mode -1)
     ;; 更改显示字体大小
-    (set-face-attribute 'default nil :font "Eurostile LT Std 12")
+    (set-face-attribute 'default nil :font "FiraMono Nerd Font 12")
     (dolist (charset '(kana han symbol cjk-misc bopomofo))
       (set-fontset-font (frame-parameter nil 'font)
-			charset (font-spec :family "KaiTi" :size 20)))
+			charset (font-spec :family "KaiTi" :size 24)))
+    (setq default-buffer-file-coding-system 'utf-8)
   #+end_src
 * try
   #+begin_src emacs-lisp
@@ -91,6 +101,22 @@
       :ensure t
       :config
       (add-hook 'after-init-hook 'global-company-mode))
+    (use-package company-php
+      :ensure t)
+    (use-package ac-php
+      :ensure t
+      :config
+      (add-hook 'php-mode-hook
+	      '(lambda ()
+		   (auto-complete-mode t)
+		   (require 'ac-php)
+		   (setq ac-sources '(ac-source-php))
+		   (yas-global-mode 1)
+
+		   (define-key php-mode-map (kbd "C-]")
+		     'ac-php-find-symbol-at-point)
+		   (define-key php-mode-map (kbd "C-t")
+		     'ac-php-location-stack-back))))
   #+end_src
 * monokai-theme
   #+begin_src emacs-lisp
@@ -105,8 +131,21 @@
       :ensure t
       :config
       (reveal-mode 1))
-    (setq org-reveal-root "file:///d:/cc/reveal")
+    (setq org-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js/")
     (setq org-reveal-mathjax t)
+  #+end
+* web-mode
+  #+begin_src emacs-lisp
+    (use-package web-mode
+      :ensure t
+      :config
+      (setq web-mode-markup-indent-offset 2) ; web-mode, html tag in html file
+      (setq web-mode-css-indent-offset 2)    ; web-mode, css in html file
+      (setq web-mode-code-indent-offset 2)   ; web-mode, js code in html file
+      (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
+      (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
+      (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
+      (add-to-list 'auto-mode-alist '("\\.php\\'" . web-mode)))
   #+end_src
 * other
   ;;(setq indo-enable-flex-matching t)
