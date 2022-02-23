@@ -6,10 +6,10 @@
     (require 'org-tempo)
     (fset 'yes-or-no-p 'y-or-n-p)
     ;; 更改显示字体大小
-    (set-face-attribute 'default nil :font "Eurostile LT Std 12")
+    (set-face-attribute 'default nil :font "Hurmit Nerd Font 14")
     (dolist (charset '(kana han symbol cjk-misc bopomofo))
       (set-fontset-font (frame-parameter nil 'font)
-			charset (font-spec :family "KaiTi" :size 20)))
+			charset (font-spec :family "KaiTi" :size 24)))
   #+end_src
 * try
   #+begin_src emacs-lisp
