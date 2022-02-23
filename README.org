@@ -1,12 +1,6 @@
 #+STARTUP: showall 
 
 * Emacs Start
-** 
-*** 
-**** 
-***** 
-****** 
-******* 
 * GitHub Link
   - [[https://github.com/ywcz/using-emacs][using-emacs]]
     

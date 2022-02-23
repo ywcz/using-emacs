@@ -1,5 +1,8 @@
 auto-save-list/
 elpa/
+.cache/
+.lsp-session-*
+*.html
 *~
 recentf
 ac-comphist.dat
