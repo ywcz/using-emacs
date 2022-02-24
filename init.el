@@ -1,3 +1,9 @@
+;; 快速打开配置文件
+(defun open-init-file()
+  (interactive)
+  (find-file "~/.emacs.d/init.el"))
+;; 这一行代码，将函数 open-init-file 绑定到 <f2> 键上
+(global-set-key (kbd "<f2>") 'open-init-file)
 
 (require 'package)
 (setq package-enable-at-startup nil)
@@ -9,6 +15,8 @@
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
+(setq use-package-always-ensure t)
+
 
 (org-babel-load-file (expand-file-name "~/.emacs.d/use-package.org"))
 

@@ -1,6 +1,9 @@
 auto-save-list/
 elpa/
 .cache/
+eshell/
+lsp-cache/
+snippets
 .lsp-session-*
 *.html
 *~
