@@ -3,6 +3,7 @@ elpa/
 .cache/
 eshell/
 lsp-cache/
+font/
 snippets
 .lsp-session-*
 *.html

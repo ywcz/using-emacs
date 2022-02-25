@@ -46,65 +46,207 @@
 			charset (font-spec :family "KaiTi" :size 24)))
     (setq default-buffer-file-coding-system 'utf-8)
   #+end_src
-* try
+* company
   #+begin_src emacs-lisp
-    (use-package try
-      :defer t)
+    (use-package company
+      :defer t
+      :config
+      (add-hook 'after-init-hook 'global-company-mode))
+  #+end_src
+* web-mode
+  #+begin_src emacs-lisp
+    (use-package web-mode
+      :config
+      (setq web-mode-markup-indent-offset 2) ; web-mode, html tag in html file
+      (setq web-mode-css-indent-offset 2)    ; web-mode, css in html file
+      (setq web-mode-code-indent-offset 2)   ; web-mode, js code in html file
+      (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
+      (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
+      (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode)))
+  #+end_src
+* csharp (tree-sitter, csharp-mode)
+  #+begin_src emacs-lisp
+    (use-package tree-sitter :defer t)
+    (use-package tree-sitter-langs :defer t)
+    (use-package tree-sitter-indent :defer t)
+
+    (use-package csharp-mode
+      :defer t
+      :config
+      (add-to-list 'auto-mode-alist '("\\.cs\\'" . csharp-tree-sitter-mode)))
+  #+end_src
+* lsp-mode lsp-ui lsp-ivy lsp-treemacs
+  #+begin_src emacs-lisp
+    (use-package lsp-mode
+      :defer t
+      :hook ((csharp-mode . lsp-deferred)
+	     (web-mode . lsp-deferred)
+	     (csharp-mode . lsp-deferred)
+	     (lsp-mode . lsp-enable-which-key-integration))
+      :commands (lsp lsp-deferred))
+    (use-package lsp-ui
+      :commands lsp-ui-mode)
+    (use-package lsp-ivy
+      :commands lsp-ivy-workspace-symbol)
+    (use-package lsp-treemacs
+      :defer t
+      :commands lsp-treemacs-errors-list)
+  #+end_src
+* ivy swiper counsel
+  #+begin_src emacs-lisp
+	(use-package ivy
+	  :defer t
+	  :diminish (ivy-mode)
+	  :bind (("C-x b" . ivy-switch-buffer))
+	  :config
+	  (ivy-mode 1)
+	  (setq ivy-use-virtual-buffers t)
+	  (setq ivy-display-style 'fancy))
+	(use-package counsel
+	  :defer t
+	  :after ivy
+	  :bind (("M-x" . counsel-M-x)
+		 ("C-x C-f" . counsel-find-file)
+		 ("C-c f" . counsel-recentf)
+		 ("C-c g" . counsel-git)))
+	(use-package swiper
+	  :defer t
+	  :after ivy
+	  :bind (("C-s" . swiper)
+		 ("C-r" . swiper-isearch-backward))
+	  :config
+	  (setq swiper-action-recenter t
+		swiper-include-line-number-in-search t))
+	(use-package ivy-posframe
+	  :ensure t
+	  :after ivy
+	  :diminish
+	  :config
+	  (setq ivy-posframe-display-functions-alist
+		'((swiper          . ivy-posframe-display-at-frame-center)
+		  (complete-symbol . ivy-posframe-display-at-point)
+		  (counsel-M-x     . ivy-posframe-display-at-frame-center)
+		  (counsel-find-file . ivy-posframe-display-at-frame-center)
+		  (ivy-switch-buffer . ivy-posframe-display-at-frame-center)
+		  (t               . ivy-posframe-display-at-frame-center))))
+    (ivy-posframe-mode nil)
+  #+end_src
+* treemacs
+  #+begin_src emacs-lisp
+    (use-package treemacs
+      :ensure t
+      :defer t
+      :init
+      (with-eval-after-load 'winum
+	(define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
+      :config
+      (progn
+	(setq treemacs-collapse-dirs                   (if treemacs-python-executable 3 0)
+	      treemacs-deferred-git-apply-delay        0.5
+	      treemacs-directory-name-transformer      #'identity
+	      treemacs-display-in-side-window          t
+	      treemacs-eldoc-display                   'simple
+	      treemacs-file-event-delay                5000
+	      treemacs-file-extension-regex            treemacs-last-period-regex-value
+	      treemacs-file-follow-delay               0.2
+	      treemacs-file-name-transformer           #'identity
+	      treemacs-follow-after-init               t
+	      treemacs-expand-after-init               t
+	      treemacs-find-workspace-method           'find-for-file-or-pick-first
+	      treemacs-git-command-pipe                ""
+	      treemacs-goto-tag-strategy               'refetch-index
+	      treemacs-indentation                     2
+	      treemacs-indentation-string              " "
+	      treemacs-is-never-other-window           nil
+	      treemacs-max-git-entries                 5000
+	      treemacs-missing-project-action          'ask
+	      treemacs-move-forward-on-expand          nil
+	      treemacs-no-png-images                   nil
+	      treemacs-no-delete-other-windows         t
+	      treemacs-project-follow-cleanup          nil
+	      treemacs-persist-file                    (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
+	      treemacs-position                        'left
+	      treemacs-read-string-input               'from-child-frame
+	      treemacs-recenter-distance               0.1
+	      treemacs-recenter-after-file-follow      nil
+	      treemacs-recenter-after-tag-follow       nil
+	      treemacs-recenter-after-project-jump     'always
+	      treemacs-recenter-after-project-expand   'on-distance
+	      treemacs-litter-directories              '("/node_modules" "/.venv" "/.cask")
+	      treemacs-show-cursor                     nil
+	      treemacs-show-hidden-files               t
+	      treemacs-silent-filewatch                nil
+	      treemacs-silent-refresh                  nil
+	      treemacs-sorting                         'alphabetic-asc
+	      treemacs-select-when-already-in-treemacs 'move-back
+	      treemacs-space-between-root-nodes        t
+	      treemacs-tag-follow-cleanup              t
+	      treemacs-tag-follow-delay                1.5
+	      treemacs-text-scale                      nil
+	      treemacs-user-mode-line-format           nil
+	      treemacs-user-header-line-format         nil
+	      treemacs-wide-toggle-width               70
+	      treemacs-width                           35
+	      treemacs-width-increment                 1
+	      treemacs-width-is-initially-locked       t
+	      treemacs-workspace-switch-cleanup        nil)
+
+	;; The default width and height of the icons is 22 pixels. If you are
+	;; using a Hi-DPI display, uncomment this to double the icon size.
+	;;(treemacs-resize-icons 44)
+
+	(treemacs-follow-mode t)
+	(treemacs-filewatch-mode t)
+	(treemacs-fringe-indicator-mode 'always)
+
+	(pcase (cons (not (null (executable-find "git")))
+		     (not (null treemacs-python-executable)))
+	  (`(t . t)
+	   (treemacs-git-mode 'deferred))
+	  (`(t . _)
+	   (treemacs-git-mode 'simple)))
+
+	(treemacs-hide-gitignored-files-mode nil))
+      :bind
+      (:map global-map
+	    ("M-0"       . treemacs-select-window)
+	    ("C-x t 1"   . treemacs-delete-other-windows)
+	    ("C-x t t"   . treemacs)
+	    ("C-x t d"   . treemacs-select-directory)
+	    ("C-x t B"   . treemacs-bookmark)
+	    ("C-x t C-t" . treemacs-find-file)
+	    ("C-x t M-t" . treemacs-find-tag)))
+
+    (use-package treemacs-evil
+      :after (treemacs evil)
+      :ensure t)
+
+    (use-package treemacs-projectile
+      :after (treemacs projectile)
+      :ensure t)
+
+    (use-package treemacs-icons-dired
+      :hook (dired-mode . treemacs-icons-dired-enable-once)
+      :ensure t)
+
+    (use-package treemacs-magit
+      :after (treemacs magit)
+      :ensure t)
+
+    (use-package treemacs-persp ;;treemacs-perspective if you use perspective.el vs. persp-mode
+      :after (treemacs persp-mode) ;;or perspective vs. persp-mode
+      :ensure t
+      :config (treemacs-set-scope-type 'Perspectives))
+  #+end_src
+* all-the-icons
+  #+begin_src emacs-lisp
+    (use-package all-the-icons)
   #+end_src
 * which-key
   #+begin_src emacs-lisp
     (use-package which-key
-      :defer t
+      :defer 7
       :config (which-key-mode)) 
-  #+end_src
-* org-bullets
-  #+begin_src emacs-lisp
-    (use-package org-bullets
-      :defer t
-      :config (add-hook 'org-mode-hook #'org-bullets-mode))
-  #+end_src
-* counsel
-  #+begin_src emacs-lisp
-    
-  #+end_src
-* ivy swiper counsel
-  #+begin_src emacs-lisp
-    (use-package ivy
-      :defer t
-      :diminish (ivy-mode)
-      :bind (("C-x b" . ivy-switch-buffer))
-      :config
-      (ivy-mode 1)
-      (setq ivy-use-virtual-buffers t)
-      (setq ivy-display-style 'fancy))
-    (use-package counsel
-      :defer t
-      :after ivy
-      :bind (("M-x" . counsel-M-x)
-	     ("C-x C-f" . counsel-find-file)
-	     ("C-c f" . counsel-recentf)
-	     ("C-c g" . counsel-git)))
-    (use-package swiper
-      :defer t
-      :after ivy
-      :bind (("C-s" . swiper)
-	     ("C-r" . swiper-isearch-backward))
-      :config
-      (setq swiper-action-recenter t
-	    swiper-include-line-number-in-search t))
-    (use-package ivy-posframe
-      :ensure t
-      :after ivy
-      :diminish
-      :config
-      (setq ivy-posframe-display-functions-alist
-	    '((swiper          . ivy-posframe-display-at-frame-center)
-	      (complete-symbol . ivy-posframe-display-at-point)
-	      (counsel-M-x     . ivy-posframe-display-at-frame-center)
-	      (counsel-find-file . ivy-posframe-display-at-frame-center)
-	      (ivy-switch-buffer . ivy-posframe-display-at-frame-center)
-	      (t               . ivy-posframe-display-at-frame-center))))
-(ivy-posframe-mode 1)
   #+end_src
 * restart-emacs
   #+begin_src emacs-lisp
@@ -119,31 +261,12 @@
       ;; To disable collection of benchmark data after init is done.
       (add-hook 'after-init-hook 'benchmark-init/deactivate))
   #+end_src
-* company
-  #+begin_src emacs-lisp
-    (use-package company
-      :defer t
-      :config
-      (add-hook 'after-init-hook 'global-company-mode))
-  #+end_src
 * monokai-theme
   #+begin_src emacs-lisp
     (use-package monokai-theme
       :defer t
       :init
       (load-theme 'monokai t))
-  #+end_src
-* web-mode
-  #+begin_src emacs-lisp
-    (use-package web-mode
-  
-      :config
-      (setq web-mode-markup-indent-offset 2) ; web-mode, html tag in html file
-      (setq web-mode-css-indent-offset 2)    ; web-mode, css in html file
-      (setq web-mode-code-indent-offset 2)   ; web-mode, js code in html file
-      (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
-      (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
-      (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode)))
   #+end_src
 * ox-reveal
   #+begin_src emacs-lisp
@@ -154,32 +277,23 @@
     (setq org-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js/")
     (setq org-reveal-mathjax t)
     #+end_SRC
-* csharp (tree-sitter, csharp-mode)
+* try
   #+begin_src emacs-lisp
-    (use-package tree-sitter :defer t)
-    (use-package tree-sitter-langs :defer t)
-    (use-package tree-sitter-indent :defer t)
-
-    (use-package csharp-mode
-      :defer t
-      :config
-      (add-to-list 'auto-mode-alist '("\\.cs\\'" . csharp-tree-sitter-mode)))
+    (use-package try
+      :defer t)
   #+end_src
-* lsp-mode
+* ace-window
   #+begin_src emacs-lisp
-    (use-package lsp-mode
+    (use-package ace-window
       :defer t
-      :hook ((csharp-mode . lsp-deferred)
-	     (web-mode . lsp-deferred)
-	     (csharp-mode . lsp-deferred)
-	     (lsp-mode . lsp-enable-which-key-integration))
-      :commands (lsp lsp-deferred))
-    (use-package lsp-ui
-      :commands lsp-ui-mode)
-    (use-package lsp-ivy
-      :commands lsp-ivy-workspace-symbol)
-    (use-package lsp-treemacs
-      :commands lsp-treemacs-errors-list)
+      :bind (("M-o" . ace-window))
+      :config (ace-window 1))
+  #+end_src
+* org-bullets
+  #+begin_src emacs-lisp
+    (use-package org-bullets
+      :defer t
+      :config (add-hook 'org-mode-hook #'org-bullets-mode))
   #+end_src
 * other
   ;;(setq indo-enable-flex-matching t)

@@ -26,7 +26,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(lsp-mode web-mode company-php ac-php ox-reveal which-key use-package try restart-emacs org-bullets monokai-theme counsel company benchmark-init auto-complete)))
+   '(treemacs-all-the-icons ace-windwo lsp-mode web-mode company-php ac-php ox-reveal which-key use-package try restart-emacs org-bullets monokai-theme counsel company benchmark-init auto-complete)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
