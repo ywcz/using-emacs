@@ -40,11 +40,11 @@
     (menu-bar-mode -1)
 
     ;; 更改显示字体大小
-    (set-face-attribute 'default nil :font "FiraCode Nerd Font 12")
-    (dolist (charset '(kana han symbol cjk-misc bopomofo))
-      (set-fontset-font (frame-parameter nil 'font)
-			charset (font-spec :family "KaiTi" :size 24)))
-    (setq default-buffer-file-coding-system 'utf-8)
+    ;;(set-face-attribute 'default nil :font "FiraCode Nerd Font 12")
+    ;;(dolist (charset '(kana han symbol cjk-misc bopomofo))
+    ;;  (set-fontset-font (frame-parameter nil 'font)
+    ;;			charset (font-spec :family "KaiTi" :size 24)))
+    ;;(setq default-buffer-file-coding-system 'utf-8)
   #+end_src
 * company
   #+begin_src emacs-lisp
