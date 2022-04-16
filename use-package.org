@@ -94,6 +94,7 @@
   #+end_src
 * ivy swiper counsel
   #+begin_src emacs-lisp
+<<<<<<< HEAD
 	(use-package ivy
 	  :defer t
 	  :diminish (ivy-mode)
@@ -129,6 +130,43 @@
 		  (counsel-find-file . ivy-posframe-display-at-frame-center)
 		  (ivy-switch-buffer . ivy-posframe-display-at-frame-center)
 		  (t               . ivy-posframe-display-at-frame-center))))
+=======
+    (use-package ivy
+      :defer t
+      :diminish (ivy-mode)
+      :bind (("C-x b" . ivy-switch-buffer))
+      :config
+      (ivy-mode 1)
+      (setq ivy-use-virtual-buffers t)
+      (setq ivy-display-style 'fancy))
+    (use-package counsel
+      :defer t
+      :after ivy
+      :bind (("M-x" . counsel-M-x)
+	     ("C-x C-f" . counsel-find-file)
+	     ("C-c f" . counsel-recentf)
+	     ("C-c g" . counsel-git)))
+    (use-package swiper
+      :defer t
+      :after ivy
+      :bind (("C-s" . swiper)
+	     ("C-r" . swiper-isearch-backward))
+      :config
+      (setq swiper-action-recenter t
+	    swiper-include-line-number-in-search t))
+    (use-package ivy-posframe
+      :ensure t
+      :after ivy
+      :diminish
+      :config
+      (setq ivy-posframe-display-functions-alist
+	    '((swiper          . ivy-posframe-display-at-frame-center)
+	      (complete-symbol . ivy-posframe-display-at-point)
+	      (counsel-M-x     . ivy-posframe-display-at-frame-center)
+	      (counsel-find-file . ivy-posframe-display-at-frame-center)
+	      (ivy-switch-buffer . ivy-posframe-display-at-frame-center)
+	      (t               . ivy-posframe-display-at-frame-center))))
+>>>>>>> bbb0b189aa0fe416d8e0242c9a3b997bd6a7fecb
     (ivy-posframe-mode nil)
   #+end_src
 * all-the-icons
@@ -289,6 +327,20 @@
     (use-package org-bullets
       :defer t
       :config (add-hook 'org-mode-hook #'org-bullets-mode))
+  #+end_src
+* slime
+  #+begin_src emacs-lisp
+    (setq inferior-lisp-program "sbcl")
+    (use-package slime
+      :ensure t)
+  #+end_src
+* cnfonts
+  #+begin_src emacs-lisp
+    (use-package cnfonts
+      :ensure t
+      :config (cnfonts-mode 1)
+      :bind (("C--" . cnfonts-decrease-fontsize)
+	     ("C-=" . cnfonts-increase-fontsize)))
   #+end_src
 * other
   ;;(setq indo-enable-flex-matching t)
