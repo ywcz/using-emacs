@@ -4,6 +4,7 @@ elpa/
 eshell/
 lsp-cache/
 font/
+cnfonts/
 snippets
 .lsp-session-*
 *.html
