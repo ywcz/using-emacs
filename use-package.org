@@ -131,6 +131,7 @@
 	      (t               . ivy-posframe-display-at-frame-center))))
     (ivy-posframe-mode nil)
   #+end_src
+
 * all-the-icons
   #+begin_src emacs-lisp
     (use-package all-the-icons
